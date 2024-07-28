@@ -1,0 +1,26 @@
+# ansible -m copy -a "dest=hello content=hello" localhost --check --diff
+- name: install nginx
+  hosts: servera
+  tags: nginx
+  diff: true
+  # check_mode: true
+  tasks: 
+  - ansible.builtin.dnf:
+      name: nginx 
+      state: latest
+
+#- name: copy module test
+#  hosts: localhost
+#  tasks:
+#  - copy: 
+#      dest: hello 
+#      content: world
+#      src: /root
+#  - command: date
+
+# ansible -m pip -a "name=argcomplete" localhost
+- name: Controller requirements
+  hosts: localhost
+  tasks:
+    - name: install ansible-lint
+      pip: name=argcomplete

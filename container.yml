@@ -1,0 +1,28 @@
+- name: pre-reqs for community.docker
+  hosts: localhost
+  tags: prereqs
+  tasks:
+  - ansible.builtin.pip:
+      name: requests
+- name: Manage Podman Networks
+  hosts: localhost
+  tasks:
+    - name: Create Podman network named ansible-network
+      containers.podman.podman_network:
+        name: ansible-network
+        state: present
+      register: result
+
+
+
+- name: create containers to use as ansible managed nodes
+  hosts: localhost
+  tasks:
+  - containers.podman.podman_container:
+      name: "c{{ item }}"
+      hostname: "c{{ item }}"
+      image: python
+      tty: true
+      interactive: true
+      network: ansible-network
+    loop: "{{ range(1,4) }}"
